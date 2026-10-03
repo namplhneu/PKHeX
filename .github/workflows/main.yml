@@ -1,0 +1,28 @@
+name: Build PKHeX
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Build PKHeX
+      run: dotnet build PKHeX.WinForms/PKHeX.WinForms.csproj -c Release
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: PKHeX-Build
+        path: PKHeX.WinForms/bin/Release/net*-windows/
